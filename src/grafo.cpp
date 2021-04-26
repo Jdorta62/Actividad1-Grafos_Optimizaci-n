@@ -31,36 +31,32 @@ void GRAFO :: build (char nombrefichero[85], int &errorapertura) {
     if (textfile.is_open()) {
       errorapertura = 0;
       unsigned i, j, k;
-      // leemos por conversion implicita el numero de nodos, arcos y el atributo dirigido
+      //leemos el numero de nodos, arcos y el atributo dirigido
       textfile >> (unsigned &) n >> (unsigned &) m >> (unsigned &) dirigido;
-      // los nodos internamente se numeran desde 0 a n-1
       // creamos las n listas de sucesores
       LS.resize(n);
       // leemos los m arcos
-      for (k=0;k<m;k++) {
-        textfile >> (unsigned &) i  >> (unsigned &) j >> (int &) dummy.c; //damos los valores a dummy.j y dummy.c
-        if(Es_dirigido() == 1) {         //1 o true (ya que es un booleano)
+      for (k=0; k < m; ++k) {
+        textfile >> (unsigned &) i  >> (unsigned &) j >> (int &) dummy.c; //inicializamos j c que son los atributos del struct ElmentoLista
+        if(Es_dirigido() == true) { 
           LP.resize(n);               //Redimensionamos LP
           dummy.j =  j - 1;     
           LS[i-1].push_back(dummy); //situamos en la posici�n del nodo i a dummy mediante push_back
           dummy.j =  i - 1;
-          LP[j-1].push_back(dummy); //pendiente de hacer un segundo push_back si es no dirigido. O no.
-        }else {
-          if(Es_dirigido() == 0) {       //0 o false (ya que es un booleano)
-          dummy.j = i-1;     //dummy.j = i
+          LP[j-1].push_back(dummy);
+        }
+        if(Es_dirigido() == false) {
+          dummy.j = i-1;
           LS[j-1].push_back(dummy);
-          if(i!= j){
-          dummy.j = j-1;
-          LS[i-1].push_back(dummy);
-          }
-        } else {                  //Si no es ninguna exit para evitar fallos (aunque al ser boleano no es necesario)
-            exit;
+          if(i!= j) {
+              dummy.j = j-1;
+              LS[i-1].push_back(dummy);
+            }
         }
       }
-    }
-  } else {
+    } else {
     errorapertura = 1;                //pendiente del valor a devolver en errorapertura            ...
-  }		
+    }		
 }
 
 void GRAFO::ListaPredecesores() {
@@ -83,29 +79,27 @@ void GRAFO:: actualizar (char nombrefichero[85], int &errorapertura)
     build(nombrefichero, errorapertura);
 }
 
-unsigned GRAFO::Es_dirigido()
-{
+unsigned GRAFO::Es_dirigido() {
+  return dirigido;
+}
+
+void GRAFO::Info_Grafo() {
+  std::cout << "Grafo ";
+  dirigido == 1 ? std::cout << "dirigido" : std::cout << "no dirigido";
+  std::cout << " | Número de nodos: " << n << " | Número de";
+  dirigido == 1 ? std::cout << " arcos: " : std::cout << " aristas: ";
+  std::cout << m << std::endl;
+}
+
+void Mostrar_Lista(vector<LA_nodo> L) {
 
 }
 
-void GRAFO::Info_Grafo()
-{
+void GRAFO :: Mostrar_Listas (int l) {
 
 }
 
-void Mostrar_Lista(vector<LA_nodo> L)
-{
-
-}
-
-void GRAFO :: Mostrar_Listas (int l)
-{
-
-}
-
-void GRAFO::Mostrar_Matriz() //Muestra la matriz de adyacencia, tanto los nodos adyacentes como sus costes
-{
-
+void GRAFO::Mostrar_Matriz() {//Muestra la matriz de adyacencia, tanto los nodos adyacentes como sus costes
 }
 
 void GRAFO::dfs_num(unsigned i, vector<LA_nodo>  L, vector<bool> &visitado, vector<unsigned> &prenum, unsigned &prenum_ind, vector<unsigned> &postnum, unsigned &postnum_ind) {//Recorrido en profundidad recursivo con recorridos enum y postnum
@@ -120,12 +114,10 @@ void GRAFO::dfs_num(unsigned i, vector<LA_nodo>  L, vector<bool> &visitado, vect
     postnum[postnum_ind++]=i;//asignamos el orden de visita posnum que corresponde al nodo i
 }
 
-void GRAFO::RecorridoProfundidad()
-{
-
+void GRAFO::RecorridoProfundidad() {
 }
 
-void GRAFO::bfs_num(	unsigned i, //nodo desde el que realizamos el recorrido en amplitud
+void GRAFO::bfs_num(unsigned i, //nodo desde el que realizamos el recorrido en amplitud
 				vector<LA_nodo>  L, //lista que recorremos, LS o LP; por defecto LS
 				vector<unsigned> &pred, //vector de predecesores en el recorrido
 				vector<unsigned> &d) {//vector de distancias a nodo i+1
@@ -158,7 +150,7 @@ void GRAFO::bfs_num(	unsigned i, //nodo desde el que realizamos el recorrido en 
         if(visitado[nodo] == false) {    //Si el nodo u no est� visitado
           visitado[nodo] = true;         //Lo visitamos
           cola.push(nodo);               //Lo metemos en la cola
-          pred[nodo] = k;                //le asignamos el predecesor
+          pred[nodo] = k+1;                //le asignamos el predecesor
           d[nodo] = d[k]+1;              //le calculamos su etiqueta distancia
       }
       };
@@ -178,12 +170,47 @@ void GRAFO::RecorridoAmplitud() { //Construye un recorrido en amplitud desde un 
     std::cerr << "Error: nodo ingresado no válido." << std::endl;
     exit(EXIT_SUCCESS);
   }
+  std::cout << "Nodo inicial: " << i << std::endl << std::endl;
   bfs_num(i,L,pred,d);
+  bool aux = true;
+  
+  
   for (unsigned int t{0}; t < d.size(); ++t) {
-    std::cout << "Distancia " << t << " aristas";
+    aux = false;
     for (unsigned int h{0}; h < d.size();++h) {
-      if(d[h] == t) std::cout << " : " << d[h];
+      if(d[h] == t && pred[h] != 0) {
+        if (aux == false) std::cout << "Distancia " << t << " aristas";
+        aux = true;
+        std::cout << " : " << (h+1);
+      }
+    }
+    if (aux == false) break;
+    std::cout << std::endl;
+  }
+  
+  std::cout << std::endl;
+  std::cout << "Ramas de conexión en el recorrido:" <<std::endl;
+
+  for (unsigned int t{1}; t < pred.size(); ++t) {
+    for (unsigned int h{0}; h < d.size(); ++h) {
+
+      vector<unsigned int> v_temp;
+      if (d[h] == t && pred[h] != 0) {
+        unsigned int temp = h+1;
+        v_temp.push_back(temp);
+        while (pred[(temp-1)] != i) {
+          temp = pred[temp-1];
+          if (temp != i) v_temp.push_back(temp);
+        }
+        std::cout << i;
+        for (unsigned int x{v_temp.size()}; x > 0; --x ) {
+          std::cout << " - " << v_temp[x-1];
+        }
+        std::cout << std::endl;
+      }
+
     }
   }
-
+  
+  
 }
