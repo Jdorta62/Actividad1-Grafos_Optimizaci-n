@@ -92,11 +92,27 @@ void GRAFO::Info_Grafo() {
 }
 
 void Mostrar_Lista(vector<LA_nodo> L) {
-
+  for (unsigned int t{0}; t < L.size(); ++t) {
+    std::cout << "[" << (t+1) << "] :";
+    if (L[t].empty()) std::cout << " null";
+    for (unsigned int h{0}; h < L[t].size(); ++h) {
+      std::cout << " | " << (L[t][h].j + 1) << " (" << L[t][h].c << ")";
+    }
+    std::cout << std::endl;
+  }
 }
 
 void GRAFO :: Mostrar_Listas (int l) {
-
+  vector<LA_nodo> L;
+  if (l == 1 || l == 0) {
+    L = LS;
+    l == 1 ? std::cout << "Nodos de la lista de sucesores" << std::endl : std::cout << "Nodos de la lista de adyacencia" << std::endl;
+  } else {
+    L = LP;
+    std::cout << "Nodos de la lista de predecesores" << std::endl;
+  }
+  std::cout << "(Nota: los costes están entre paréntesis. El otro número es el nodo)" << std::endl;
+  Mostrar_Lista(L);
 }
 
 void GRAFO::Mostrar_Matriz() {//Muestra la matriz de adyacencia, tanto los nodos adyacentes como sus costes

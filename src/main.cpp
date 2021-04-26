@@ -83,24 +83,27 @@ int main(int argc, char *argv[]) {
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           break;
 
-		case 's':
+		    case 's':
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
+          G.Mostrar_Listas(1);
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           break;
 
-		case 'p':
+		    case 'p':
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
+          G.Mostrar_Listas(-1);
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           break;       
         
-		case 'm':
+		    case 'm':
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           G.RecorridoAmplitud();
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           break;
         
-		case 'a':
+		    case 'a':
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
+          G.Mostrar_Listas(0);
           std::cout << std::endl << "-------------------------------------------------" << std::endl << std::endl;
           break;
         }
