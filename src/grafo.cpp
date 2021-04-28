@@ -227,6 +227,6 @@ void GRAFO::RecorridoAmplitud() { //Construye un recorrido en amplitud desde un 
 
     }
   }
-  
+
   
 }
